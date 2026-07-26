@@ -1,47 +1,150 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { auth, db } from "../firebase/firebase";
+import { doc, getDoc, setDoc } from "firebase/firestore";
+
 export default function ProfilePage() {
+  const [loading, setLoading] = useState(true);
+
+  const [name, setName] = useState("");
+  const [age, setAge] = useState("");
+  const [city, setCity] = useState("");
+  const [relationship, setRelationship] = useState("");
+  const [bio, setBio] = useState("");
+
+  useEffect(() => {
+    loadProfile();
+  }, []);
+
+  async function loadProfile() {
+    const user = auth.currentUser;
+
+    if (!user) {
+      setLoading(false);
+      return;
+    }
+
+    const ref = doc(db, "profiles", user.uid);
+    const snap = await getDoc(ref);
+
+    if (snap.exists()) {
+      const data = snap.data();
+
+      setName(data.name || user.displayName || "");
+      setAge(data.age || "");
+      setCity(data.city || "");
+      setRelationship(data.relationship || "");
+      setBio(data.bio || "");
+    } else {
+      setName(user.displayName || "");
+
+      await setDoc(doc(db, "profiles", user.uid), {
+        name: user.displayName || "",
+        age: "",
+        city: "",
+        relationship: "",
+        bio: "",
+      });
+    }
+
+    setLoading(false);
+  }
+
+  async function saveProfile() {
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    await setDoc(
+      doc(db, "profiles", user.uid),
+      {
+        name,
+        age,
+        city,
+        relationship,
+        bio,
+      },
+      { merge: true }
+    );
+
+    alert("Profilo salvato!");
+  }
+
+  if (loading) {
+    return <p className="p-10">Caricamento...</p>;
+  }
+
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-800 to-cyan-500 flex items-center justify-center p-10">
-      <div className="bg-white rounded-3xl shadow-2xl p-10 max-w-3xl w-full">
+    <main className="min-h-screen bg-slate-100 flex justify-center p-8">
+      <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-xl">
 
-        <div className="flex flex-col items-center">
+        <h1 className="text-3xl font-bold mb-8">
+          Il mio profilo
+        </h1>
 
-          <div className="w-40 h-40 rounded-full bg-cyan-300 mb-6"></div>
+        <label className="font-semibold">
+          Nome
+        </label>
 
-          <h1 className="text-4xl font-bold">Marco Rossi</h1>
+        <input
+          className="w-full border rounded-xl p-3 mb-5"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+        />
 
-          <p className="text-gray-500 text-lg">
-            29 anni • Milano
-          </p>
+        <label className="font-semibold">
+          Età
+        </label>
 
-          <div className="grid grid-cols-2 gap-6 mt-10 w-full">
+        <input
+          className="w-full border rounded-xl p-3 mb-5"
+          value={age}
+          onChange={(e) => setAge(e.target.value)}
+        />
 
-            <div className="bg-gray-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">🚢 Crociera</h3>
-              <p>MSC World Europa</p>
-            </div>
+        <label className="font-semibold">
+          Città
+        </label>
 
-            <div className="bg-gray-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">📅 Partenza</h3>
-              <p>15 Agosto 2026</p>
-            </div>
+        <input
+          className="w-full border rounded-xl p-3 mb-5"
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
+        />
 
-            <div className="bg-gray-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">🎉 Interessi</h3>
-              <p>Escursioni, Aperitivi, Relax</p>
-            </div>
+        <label className="font-semibold">
+          Stato sentimentale
+        </label>
 
-            <div className="bg-gray-100 rounded-2xl p-5">
-              <h3 className="font-bold mb-2">🌍 Lingue</h3>
-              <p>Italiano, Inglese</p>
-            </div>
+        <select
+          className="w-full border rounded-xl p-3 mb-5"
+          value={relationship}
+          onChange={(e) => setRelationship(e.target.value)}
+        >
+          <option value="">Seleziona</option>
+          <option value="Single">Single</option>
+          <option value="Fidanzato/a">Fidanzato/a</option>
+          <option value="Sposato/a">Sposato/a</option>
+        </select>
 
-          </div>
+        <label className="font-semibold">
+          Descrizione
+        </label>
 
-          <button className="mt-10 bg-cyan-500 hover:bg-cyan-600 text-white px-8 py-4 rounded-xl font-bold">
-            Invia Messaggio
-          </button>
+        <textarea
+          rows={5}
+          className="w-full border rounded-xl p-3 mb-8"
+          value={bio}
+          onChange={(e) => setBio(e.target.value)}
+        />
 
-        </div>
+        <button
+          onClick={saveProfile}
+          className="w-full bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl p-4 font-bold"
+        >
+          Salva Profilo
+        </button>
 
       </div>
     </main>

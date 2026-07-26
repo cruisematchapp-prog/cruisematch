@@ -2,65 +2,144 @@
 
 import Link from "next/link";
 
-export default function Dashboard() {
+export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-800 to-cyan-500 p-10">
+    <main className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-800 to-cyan-500 p-8">
 
       <div className="max-w-6xl mx-auto">
 
-        <h1 className="text-5xl font-bold text-white mb-10">
+        <h1 className="text-5xl font-bold text-white mb-8">
           🚢 CruiseMatch Dashboard
         </h1>
 
-        <div className="grid md:grid-cols-2 gap-8">
+        {/* COUNTDOWN */}
 
-          <Link href="/my-cruise">
-            <div className="bg-white rounded-3xl p-10 shadow-xl hover:scale-105 duration-300 cursor-pointer">
-              <h2 className="text-3xl font-bold">
-                🚢 Ho già prenotato
-              </h2>
+        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
 
-              <p className="mt-4 text-gray-600">
-                Inserisci la tua nave e trova chi farà la tua stessa crociera.
-              </p>
+          <h2 className="text-2xl font-bold">
+            ⏳ Countdown Crociera
+          </h2>
+
+          <div className="mt-6 text-center">
+
+            <p className="text-gray-500">
+              Mancano
+            </p>
+
+            <div className="text-6xl font-extrabold text-cyan-600 mt-3">
+              125
             </div>
+
+            <p className="text-2xl mt-2">
+              giorni
+            </p>
+
+          </div>
+
+        </div>
+
+        {/* MENU */}
+
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <Link
+            href="/my-cruise"
+            className="bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition"
+          >
+            <h2 className="text-3xl font-bold">
+              🚢
+            </h2>
+
+            <h3 className="text-xl font-bold mt-4">
+              La mia crociera
+            </h3>
+
+            <p className="text-gray-600 mt-2">
+              Gestisci la tua partenza.
+            </p>
           </Link>
 
-          <Link href="/search-cruise">
-            <div className="bg-white rounded-3xl p-10 shadow-xl hover:scale-105 duration-300 cursor-pointer">
-              <h2 className="text-3xl font-bold">
-                🔍 Sto cercando una crociera
-              </h2>
+          <Link
+            href="/community"
+            className="bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition"
+          >
+            <h2 className="text-3xl font-bold">
+              👥
+            </h2>
 
-              <p className="mt-4 text-gray-600">
-                Cerca una crociera MSC o Costa anche se non l'hai ancora prenotata.
-              </p>
-            </div>
+            <h3 className="text-xl font-bold mt-4">
+              Community
+            </h3>
+
+            <p className="text-gray-600 mt-2">
+              Guarda chi sarà sulla tua nave.
+            </p>
           </Link>
 
-          <Link href="/community">
-            <div className="bg-white rounded-3xl p-10 shadow-xl hover:scale-105 duration-300 cursor-pointer">
-              <h2 className="text-3xl font-bold">
-                ❤️ Community
-              </h2>
+          <Link
+            href="/profile"
+            className="bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition"
+          >
+            <h2 className="text-3xl font-bold">
+              🙋
+            </h2>
 
-              <p className="mt-4 text-gray-600">
-                Guarda tutti gli utenti iscritti.
-              </p>
-            </div>
+            <h3 className="text-xl font-bold mt-4">
+              Profilo
+            </h3>
+
+            <p className="text-gray-600 mt-2">
+              Modifica il tuo profilo.
+            </p>
           </Link>
 
-          <Link href="/profile">
-            <div className="bg-white rounded-3xl p-10 shadow-xl hover:scale-105 duration-300 cursor-pointer">
-              <h2 className="text-3xl font-bold">
-                👤 Il mio profilo
-              </h2>
+          <div className="bg-yellow-300 rounded-3xl p-8 shadow-xl">
 
-              <p className="mt-4 text-gray-600">
-                Modifica le tue informazioni.
-              </p>
-            </div>
-          </Link>
+            <h2 className="text-3xl">
+              ⭐
+            </h2>
+
+            <h3 className="text-xl font-bold mt-4">
+              Premium
+            </h3>
+
+            <p className="mt-2">
+              Sblocca foto, chat e funzioni esclusive.
+            </p>
+
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 shadow-xl">
+
+            <h2 className="text-3xl">
+              💬
+            </h2>
+
+            <h3 className="text-xl font-bold mt-4">
+              Chat
+            </h3>
+
+            <p className="mt-2">
+              In arrivo...
+            </p>
+
+          </div>
+
+          <div className="bg-white rounded-3xl p-8 shadow-xl">
+
+            <h2 className="text-3xl">
+              ❤️
+            </h2>
+
+            <h3 className="text-xl font-bold mt-4">
+              Match
+            </h3>
+
+            <p className="mt-2">
+              Troveremo automaticamente persone compatibili.
+            </p>
+
+          </div>
 
         </div>
 
