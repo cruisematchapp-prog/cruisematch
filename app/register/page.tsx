@@ -35,31 +35,44 @@ export default function RegisterPage() {
           width: 350,
         }}
       >
-        <h1>Registrati</h1>
+       <h1 style={{color:"black", fontSize:30, fontWeight:"bold"}}>
+  Registrati
+</h1>
+<p style={{color:"black"}}>
+  Email visibile
+</p>
+ <input
+  placeholder="Email"
+  
+  value={email}
+  onChange={(e) => setEmail(e.target.value)}
+  style={{
+    width: "100%",
+    padding: 12,
+    marginTop: 20,
+    marginBottom: 15,
+    color: "black",
+    background: "white",
+    border: "1px solid #ccc",
+    borderRadius: 8,
+  }}
+/>
 
         <input
-          placeholder="Email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          style={{
-            width: "100%",
-            padding: 12,
-            marginTop: 20,
-            marginBottom: 15,
-          }}
-        />
-
-        <input
-          type="password"
-          placeholder="Password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          style={{
-            width: "100%",
-            padding: 12,
-            marginBottom: 20,
-          }}
-        />
+  type="password"
+  placeholder="Password"
+  value={password}
+  onChange={(e) => setPassword(e.target.value)}
+  style={{
+    width: "100%",
+    padding: 12,
+    marginBottom: 20,
+    color: "black",
+    background: "white",
+    border: "1px solid #ccc",
+    borderRadius: 8,
+  }}
+/>
 
         <button
           onClick={register}
