@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-
+import AdBanner from "../components/AdBanner";
 export default function DashboardPage() {
   return (
    <main
@@ -17,7 +17,7 @@ export default function DashboardPage() {
           🚢 CruiseMatch Dashboard
         </h1>
 
-        {/* COUNTDOWN */}
+        {/* COUNTDOWN */}<AdBanner />
 
        <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl shadow-xl p-6 mb-8 text-white">
 

@@ -1,5 +1,5 @@
 "use client";
-
+import AdBanner from "../components/AdBanner";
 import { useState } from "react";
 import Link from "next/link";
 import {
@@ -95,13 +95,13 @@ return (
 
       <div className="max-w-5xl mx-auto">
 
-        <div className="bg-white rounded-3xl shadow-xl p-8">
+        <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl shadow-xl p-8 text-white">
 
-          <h1 className="text-4xl font-bold mb-2">
+          <h1 className="text-4xl font-bold mb-2 text-white">
             🚢 Trova persone sulla tua crociera
           </h1>
 
-          <p className="text-gray-500 mb-8">
+          <p className="text-slate-200 mb-8">
             Cerca altri crocieristi che partiranno con te.
           </p>
 
@@ -110,7 +110,7 @@ return (
             <select
               value={company}
               onChange={(e) => setCompany(e.target.value)}
-              className="border rounded-xl p-3"
+             className="border rounded-xl p-3 text-black bg-white"
             >
               <option>MSC</option>
               <option>Costa</option>
@@ -121,18 +121,26 @@ return (
             </select>
 
             <input
-              value={ship}
-              onChange={(e) => setShip(e.target.value)}
-              placeholder="Nome nave"
-              className="border rounded-xl p-3"
-            />
 
-            <input
-              type="date"
-              value={departureDate}
-              onChange={(e) => setDepartureDate(e.target.value)}
-              className="border rounded-xl p-3"
-            />
+  value={ship}
+  onChange={(e) => setShip(e.target.value)}
+  placeholder="Nome nave"
+  style={{
+    background: "white",
+    color: "black",
+    fontSize: "20px",
+    padding: "15px",
+    border: "3px solid black",
+    borderRadius: "12px",
+  }}
+/>
+
+ <input
+  type="date"
+  value={departureDate}
+  onChange={(e) => setDepartureDate(e.target.value)}
+  className="border rounded-xl p-3 text-black bg-white"
+/>
 
           </div>
 
@@ -145,25 +153,29 @@ return (
 
         </div>
 
-        <div className="mt-10 grid md:grid-cols-2 gap-6">
+<div className="mt-8">
+  <AdBanner />
+</div>
+
+<div className="mt-10 grid md:grid-cols-2 gap-6">
 
           {results.length === 0 && !loading && (
-            <div className="col-span-2 bg-white rounded-3xl p-8 text-center shadow">
+           <div className="col-span-2 bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl p-8 text-center shadow text-white">
               <h2 className="text-2xl font-bold">
                 Nessun crocierista trovato.
               </h2>
 
-              <p className="text-gray-500 mt-2">
+             <p className="text-slate-300">
                 Prova con un'altra nave oppure attendi che altri utenti si iscrivano.
               </p>
             </div>
           )}
 
           {results.map((user) => (
-            <div
-              key={user.uid}
-              className="bg-white rounded-3xl shadow-xl p-6"
-            >
+  <div
+    key={user.uid}
+    className="premium-card"
+  >
               <div className="flex items-center gap-5">
 
                 <div className="w-20 h-20 rounded-full bg-cyan-500 flex items-center justify-center text-3xl text-white font-bold">
