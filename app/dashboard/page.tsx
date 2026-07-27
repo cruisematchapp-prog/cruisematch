@@ -4,17 +4,23 @@ import Link from "next/link";
 
 export default function DashboardPage() {
   return (
-    <main className="min-h-screen bg-gradient-to-br from-blue-950 via-blue-800 to-cyan-500 p-8">
+   <main
+  className="min-h-screen p-6 bg-cover bg-center relative"
+  style={{
+    backgroundImage: "url('/images/dashboard-bg.jpg')",
+  }}
+>
+<div className="absolute inset-0 bg-slate-950/60"></div>
+<div className="max-w-6xl mx-auto relative z-10">
 
-      <div className="max-w-6xl mx-auto">
 
-        <h1 className="text-5xl font-bold text-white mb-8">
+        <h1 className="text-4xl md:text-5xl font-black text-white mb-8 text-center">
           🚢 CruiseMatch Dashboard
         </h1>
 
         {/* COUNTDOWN */}
 
-        <div className="bg-white rounded-3xl shadow-xl p-8 mb-8">
+        <div className="bg-white rounded-3xl shadow-xl p-6 mb-8">
 
           <h2 className="text-2xl font-bold">
             ⏳ Countdown Crociera
@@ -40,7 +46,7 @@ export default function DashboardPage() {
 
         {/* MENU */}
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
 <Link
   href="/add-cruise"
   className="bg-cyan-400 rounded-3xl p-8 shadow-xl hover:scale-105 transition"
