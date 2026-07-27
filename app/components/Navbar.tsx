@@ -1,47 +1,64 @@
+"use client";
+
 import Link from "next/link";
-import Image from "next/image";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
+  const pathname = usePathname();
+
+ const linkStyle = (path: string) =>
+  `px-5 py-2 rounded-xl transition-all duration-300 border border-white/30 ${
+    pathname === path
+      ? "bg-cyan-400 text-slate-900 font-bold"
+      : "bg-slate-900/70 text-white hover:bg-cyan-400 hover:text-slate-900"
+  }`;
+
   return (
-    <nav className="fixed top-0 left-0 w-full bg-black/30 backdrop-blur-md z-50">
+   <header className="fixed top-0 left-0 right-0 z-50 backdrop-blur-xl bg-slate-950/80 border-b border-white/20 shadow-lg">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-8 py-4">
 
-        <Link href="/" className="flex items-center gap-3">
-          <Image
-            src="/images/logo.png"
-            alt="CruiseMatch"
-            width={60}
-            height={60}
-          />
-          <span className="text-2xl font-bold text-white">
-            Cruise<span className="text-cyan-300">Match</span>
-          </span>
+        <Link
+          href="/"
+          className="text-3xl font-black tracking-wide text-cyan-300"
+        >
+          🚢 CruiseMatch
         </Link>
 
-        <div className="flex items-center gap-8 text-white">
+        <nav className="flex items-center gap-3">
 
-          <Link href="/">Home</Link>
+          <Link href="/" className={linkStyle("/")}>
+            Home
+          </Link>
 
-          <Link href="/cruises">Crociere</Link>
+          <Link href="/community" className={linkStyle("/community")}>
+            Community
+          </Link>
 
-          <Link href="/community">Community</Link>
+          <Link href="/cruises" className={linkStyle("/cruises")}>
+            Crociere
+          </Link>
 
-          <Link
-            href="/login"
-            className="bg-cyan-400 text-black px-5 py-2 rounded-xl font-semibold hover:bg-cyan-300 transition"
+          <Link href="/my-cruise" className={linkStyle("/my-cruise")}>
+            La mia crociera
+          </Link>
+
+          <Link href="/profile" className={linkStyle("/profile")}>
+  Profilo
+</Link>
+
+<Link href="/my-chats" className={linkStyle("/my-chats")}>
+  Le mie chat
+</Link>
+
+<Link
+  href="/login"
+            className="ml-4 bg-cyan-400 text-slate-900 px-5 py-2 rounded-xl font-bold hover:scale-105 transition"
           >
             Accedi
           </Link>
 
-          <Link
-            href="/register"
-            className="border border-white px-5 py-2 rounded-xl hover:bg-white hover:text-black transition"
-          >
-            Registrati
-          </Link>
-
-        </div>
+        </nav>
       </div>
-    </nav>
+    </header>
   );
 }

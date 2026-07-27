@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { auth, db } from "../firebase/firebase";
+import { auth, db, storage } from "../firebase/firebase";
 import { doc, getDoc, setDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import Navbar from "../components/Navbar";
 
 export default function ProfilePage() {
   const [loading, setLoading] = useState(true);
@@ -12,6 +14,7 @@ export default function ProfilePage() {
   const [city, setCity] = useState("");
   const [relationship, setRelationship] = useState("");
   const [bio, setBio] = useState("");
+  const [photoURL, setPhotoURL] = useState("");
 
   useEffect(() => {
     loadProfile();
@@ -25,30 +28,34 @@ export default function ProfilePage() {
       return;
     }
 
-    const ref = doc(db, "profiles", user.uid);
-    const snap = await getDoc(ref);
+    const snap = await getDoc(doc(db, "profiles", user.uid));
 
     if (snap.exists()) {
       const data = snap.data();
 
-      setName(data.name || user.displayName || "");
+      setName(data.name || "");
       setAge(data.age || "");
       setCity(data.city || "");
       setRelationship(data.relationship || "");
       setBio(data.bio || "");
-    } else {
-      setName(user.displayName || "");
-
-      await setDoc(doc(db, "profiles", user.uid), {
-        name: user.displayName || "",
-        age: "",
-        city: "",
-        relationship: "",
-        bio: "",
-      });
+      setPhotoURL(data.photoURL || "");
     }
 
     setLoading(false);
+  }
+
+  async function uploadPhoto(file: File) {
+    const user = auth.currentUser;
+
+    if (!user) return;
+
+    const storageRef = ref(storage, `profiles/${user.uid}`);
+
+    await uploadBytes(storageRef, file);
+
+    const url = await getDownloadURL(storageRef);
+
+    setPhotoURL(url);
   }
 
   async function saveProfile() {
@@ -64,6 +71,7 @@ export default function ProfilePage() {
         city,
         relationship,
         bio,
+        photoURL,
       },
       { merge: true }
     );
@@ -72,81 +80,111 @@ export default function ProfilePage() {
   }
 
   if (loading) {
-    return <p className="p-10">Caricamento...</p>;
-  }
-
-  return (
-    <main className="min-h-screen bg-slate-100 flex justify-center p-8">
-      <div className="bg-white rounded-3xl shadow-xl p-8 w-full max-w-xl">
-
-        <h1 className="text-3xl font-bold mb-8">
-          Il mio profilo
+    return (
+      <main className="min-h-screen flex items-center justify-center">
+        <h1 className="text-4xl font-bold animate-pulse">
+          Caricamento...
         </h1>
+      </main>
+    );
+  }  return (
+    <>
+      <Navbar />
 
-        <label className="font-semibold">
-          Nome
-        </label>
+      <main className="min-h-screen pt-28 pb-16 px-6">
 
-        <input
-          className="w-full border rounded-xl p-3 mb-5"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        <div className="max-w-3xl mx-auto premium-card">
 
-        <label className="font-semibold">
-          Età
-        </label>
+          <h1 className="text-4xl font-black text-center mb-10">
+            👤 Il mio Profilo
+          </h1>
 
-        <input
-          className="w-full border rounded-xl p-3 mb-5"
-          value={age}
-          onChange={(e) => setAge(e.target.value)}
-        />
+          <div className="flex flex-col items-center mb-10">
 
-        <label className="font-semibold">
-          Città
-        </label>
+            <img
+              src={
+                photoURL ||
+                `https://ui-avatars.com/api/?background=0ea5e9&color=fff&size=300&name=${encodeURIComponent(
+                  name || "User"
+                )}`
+              }
+              alt="Profilo"
+              className="w-40 h-40 rounded-full object-cover border-4 border-cyan-400 shadow-xl"
+            />
 
-        <input
-          className="w-full border rounded-xl p-3 mb-5"
-          value={city}
-          onChange={(e) => setCity(e.target.value)}
-        />
+            <label className="btn-primary mt-6 cursor-pointer">
 
-        <label className="font-semibold">
-          Stato sentimentale
-        </label>
+              📷 Carica Foto
 
-        <select
-          className="w-full border rounded-xl p-3 mb-5"
-          value={relationship}
-          onChange={(e) => setRelationship(e.target.value)}
-        >
-          <option value="">Seleziona</option>
-          <option value="Single">Single</option>
-          <option value="Fidanzato/a">Fidanzato/a</option>
-          <option value="Sposato/a">Sposato/a</option>
-        </select>
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                onChange={(e) => {
+                  if (e.target.files?.[0]) {
+                    uploadPhoto(e.target.files[0]);
+                  }
+                }}
+              />
 
-        <label className="font-semibold">
-          Descrizione
-        </label>
+            </label>
 
-        <textarea
-          rows={5}
-          className="w-full border rounded-xl p-3 mb-8"
-          value={bio}
-          onChange={(e) => setBio(e.target.value)}
-        />
+          </div>
 
-        <button
-          onClick={saveProfile}
-          className="w-full bg-cyan-500 hover:bg-cyan-600 text-white rounded-xl p-4 font-bold"
-        >
-          Salva Profilo
-        </button>
+          <div className="space-y-5">
 
-      </div>
-    </main>
+            <input
+              className="w-full p-4 rounded-xl bg-white/10 border border-white/20"
+              placeholder="Nome"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
+
+            <input
+              className="w-full p-4 rounded-xl bg-white/10 border border-white/20"
+              placeholder="Età"
+              value={age}
+              onChange={(e) => setAge(e.target.value)}
+            />
+
+            <input
+              className="w-full p-4 rounded-xl bg-white/10 border border-white/20"
+              placeholder="Città"
+              value={city}
+              onChange={(e) => setCity(e.target.value)}
+            />
+
+            <select
+              className="w-full p-4 rounded-xl bg-white/10 border border-white/20"
+              value={relationship}
+              onChange={(e) => setRelationship(e.target.value)}
+            >
+              <option value="">Stato sentimentale</option>
+              <option value="Single">Single</option>
+              <option value="Fidanzato/a">Fidanzato/a</option>
+              <option value="Sposato/a">Sposato/a</option>
+            </select>
+
+            <textarea
+              rows={5}
+              className="w-full p-4 rounded-xl bg-white/10 border border-white/20"
+              placeholder="Racconta qualcosa di te..."
+              value={bio}
+              onChange={(e) => setBio(e.target.value)}
+            />
+
+            <button
+              onClick={saveProfile}
+              className="btn-primary w-full py-4 text-lg"
+            >
+              💾 Salva Profilo
+            </button>
+
+          </div>
+
+        </div>
+
+      </main>
+    </>
   );
 }

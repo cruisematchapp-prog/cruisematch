@@ -41,7 +41,23 @@ export default function DashboardPage() {
         {/* MENU */}
 
         <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+<Link
+  href="/add-cruise"
+  className="bg-cyan-400 rounded-3xl p-8 shadow-xl hover:scale-105 transition"
+>
+  <h2 className="text-3xl">
+    ➕🚢
+  </h2>
 
+  <h3 className="text-xl font-bold mt-4">
+    Inserisci la tua crociera
+  </h3>
+
+  <p className="mt-2">
+    Aggiungi nave, data e porto di partenza.
+  </p>
+
+</Link>
           <Link
             href="/my-cruise"
             className="bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition"
