@@ -58,7 +58,9 @@ export default function MyChatsPage() {
 
     setChats(list);
     setLoading(false);
-  }  if (loading) {
+    }
+
+  if (loading) {
     return (
       <>
         <Navbar />
