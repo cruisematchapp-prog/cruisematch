@@ -10,9 +10,8 @@ export default function DashboardPage() {
     backgroundImage: "url('/images/dashboard-bg.jpg')",
   }}
 >
-<div className="absolute inset-0 bg-slate-950/60"></div>
-<div className="max-w-6xl mx-auto relative z-10">
-
+      <div className="absolute inset-0 bg-slate-950/60"></div>
+      <div className="max-w-6xl mx-auto relative z-10">
 
         <h1 className="text-4xl md:text-5xl font-black text-white mb-8 text-center">
           🚢 CruiseMatch Dashboard
@@ -20,7 +19,7 @@ export default function DashboardPage() {
 
         {/* COUNTDOWN */}
 
-        <div className="bg-white rounded-3xl shadow-xl p-6 mb-8">
+       <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl shadow-xl p-6 mb-8 text-white">
 
           <h2 className="text-2xl font-bold">
             ⏳ Countdown Crociera
@@ -66,7 +65,7 @@ export default function DashboardPage() {
 </Link>
           <Link
             href="/my-cruise"
-            className="bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition"
+            className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl p-8 shadow-xl text-white"
           >
             <h2 className="text-3xl font-bold">
               🚢
@@ -83,7 +82,7 @@ export default function DashboardPage() {
 
           <Link
             href="/community"
-            className="bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition"
+           className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl p-8 shadow-xl text-white"
           >
             <h2 className="text-3xl font-bold">
               👥
@@ -100,7 +99,7 @@ export default function DashboardPage() {
 
           <Link
             href="/profile"
-            className="bg-white rounded-3xl p-8 shadow-xl hover:scale-105 transition"
+            className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl p-8 shadow-xl text-white"
           >
             <h2 className="text-3xl font-bold">
               🙋
@@ -131,7 +130,7 @@ export default function DashboardPage() {
 
           </div>
 
-          <div className="bg-white rounded-3xl p-8 shadow-xl">
+          <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl p-8 shadow-xl text-white">
 
             <h2 className="text-3xl">
               💬
@@ -147,7 +146,7 @@ export default function DashboardPage() {
 
           </div>
 
-          <div className="bg-white rounded-3xl p-8 shadow-xl">
+                   <div className="bg-white/20 backdrop-blur-xl border border-white/30 rounded-3xl p-8 shadow-xl text-white">
 
             <h2 className="text-3xl">
               ❤️
@@ -166,7 +165,6 @@ export default function DashboardPage() {
         </div>
 
       </div>
-
-    </main>
+  </main>
   );
 }
