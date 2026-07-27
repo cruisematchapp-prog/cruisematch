@@ -1,17 +1,20 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase/firebase";
 
 export default function RegisterPage() {
+
+  const router = useRouter();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-
   async function register() {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
-      alert("Registrazione completata!");
+router.push("/dashboard");
     } catch (error: any) {
       alert(error.message);
     }
