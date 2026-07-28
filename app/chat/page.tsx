@@ -1,15 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
-import Navbar from "../components/Navbar";
+
 import { auth, db } from "../firebase/firebase";
+
 import {
   addDoc,
   collection,
-  doc,
-  getDoc,
-  setDoc,
   onSnapshot,
   orderBy,
   query,
@@ -18,137 +16,184 @@ import {
 
 type Message = {
   id: string;
+  senderId: string;
+  receiverId: string;
   text: string;
-  sender: string;
+  createdAt?: any;
 };
 
-function ChatContent() {
-  const [text, setText] = useState("");
+export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([]);
-const searchParams = useSearchParams();
-const otherUser = searchParams.get("user");
-const currentUser = auth.currentUser;
+  const [text, setText] = useState("");
+  const [loading, setLoading] = useState(true);
 
-const chatId =
-  currentUser && otherUser
-    ? [currentUser.uid, otherUser].sort().join("_")
-    : "";
- useEffect(() => {if (!chatId) return;
-    if (!chatId) return;
-   const q = query(
-  collection(db, "chats", chatId, "messages"),
-  orderBy("createdAt", "asc")
-);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  const currentUser = auth.currentUser;
+
+  const searchParams = useSearchParams();
+
+  const otherUserId = searchParams.get("uid") || "";
+
+  useEffect(() => {
+    if (!currentUser || !otherUserId) return;
+
+    const q = query(
+      collection(db, "messages"),
+      orderBy("createdAt", "asc")
+    );
+
     const unsubscribe = onSnapshot(q, (snapshot) => {
       const list: Message[] = [];
 
       snapshot.forEach((doc) => {
-        list.push({
-          id: doc.id,
-          ...(doc.data() as Omit<Message, "id">),
-        });
+        const data = doc.data();
+
+        const mine =
+          data.senderId === currentUser.uid &&
+          data.receiverId === otherUserId;
+
+        const theirs =
+          data.senderId === otherUserId &&
+          data.receiverId === currentUser.uid;
+
+        if (mine || theirs) {
+          list.push({
+            id: doc.id,
+            ...(data as Omit<Message, "id">),
+          });
+        }
       });
 
       setMessages(list);
+      setLoading(false);
+
+      setTimeout(() => {
+        bottomRef.current?.scrollIntoView({
+          behavior: "smooth",
+        });
+      }, 100);
     });
 
     return () => unsubscribe();
-  }, []);
+  }, [currentUser, otherUserId]);
 
   async function sendMessage() {
+    if (!currentUser) return;
+
+    if (!otherUserId) return;
+
     if (!text.trim()) return;
 
-    const user = auth.currentUser;
-    if (!chatId) {
-  alert("Chat non disponibile");
-  return;
-}
-
-    if (!user) return;
-const chatRef = doc(db, "chats", chatId);
-
-const chatSnap = await getDoc(chatRef);
-
-if (!chatSnap.exists()) {
-  await setDoc(chatRef, {
-  users: [user.uid, otherUser],
-  createdAt: serverTimestamp(),
-});
-}
-    await addDoc(collection(db, "chats", chatId, "messages"), {
-      text,
-      sender: user.uid,
+    await addDoc(collection(db, "messages"), {
+      senderId: currentUser.uid,
+      receiverId: otherUserId,
+      text: text.trim(),
       createdAt: serverTimestamp(),
     });
 
     setText("");
-  }  return (
-    <>
-      <Navbar />
+  }  if (!currentUser) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+        Devi effettuare l'accesso.
+      </div>
+    );
+  }
 
-      <main className="min-h-screen pt-28 px-6 pb-10">
+  if (!otherUserId) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-slate-900 text-white">
+        Nessun utente selezionato.
+      </div>
+    );
+  }
 
-        <div className="max-w-4xl mx-auto premium-card">
-
-          <h1 className="text-4xl font-black text-center mb-10">
-            💬 Chat CruiseMatch
-          </h1>
-
-          <div className="h-[500px] rounded-2xl bg-slate-900/40 border border-white/10 p-6 overflow-y-auto space-y-4">
-
-            {messages.map((msg) => (
-              <div
-                key={msg.id}
-                className={
-                  msg.sender === auth.currentUser?.uid
-                    ? "text-right"
-                    : "text-left"
-                }
-              >
-                <div
-                  className={
-                    msg.sender === auth.currentUser?.uid
-                      ? "inline-block bg-cyan-500 text-black px-4 py-2 rounded-2xl"
-                      : "inline-block bg-white/10 px-4 py-2 rounded-2xl"
-                  }
-                >
-                  {msg.text}
-                </div>
-              </div>
-            ))}
-
-          </div>
-
-          <div className="flex gap-3 mt-6">
-
-            <input
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              className="flex-1 p-4 rounded-xl bg-white/10 border border-white/20"
-              placeholder="Scrivi un messaggio..."
-            />
-
-            <button
-              onClick={sendMessage}
-              className="btn-primary px-8"
-            >
-              Invia
-            </button>
-
-          </div>
-
-              </div>
-
-    </main>
-  </>
-);
-}
-import { Suspense } from "react";
-
-export default function ChatPage() {
   return (
-    <Suspense fallback={<div>Caricamento chat...</div>}>
-      <ChatContent />
-    </Suspense>
+    <div className="min-h-screen bg-slate-900 flex flex-col">
+
+      {/* Header */}
+      <div className="bg-slate-800 border-b border-slate-700 px-5 py-4">
+
+        <h1 className="text-xl font-bold text-white">
+          Chat
+        </h1>
+
+        <p className="text-slate-400 text-sm">
+          Parla con i crocieristi 🚢
+        </p>
+
+      </div>
+
+      {/* Messaggi */}
+      <div className="flex-1 overflow-y-auto p-5 space-y-3">
+
+        {loading && (
+          <p className="text-center text-slate-400">
+            Caricamento...
+          </p>
+        )}
+
+        {!loading && messages.length === 0 && (
+          <p className="text-center text-slate-500">
+            Nessun messaggio.
+          </p>
+        )}
+
+        {messages.map((message) => {
+
+          const mine = message.senderId === currentUser.uid;
+
+          return (
+            <div
+              key={message.id}
+              className={`flex ${
+                mine ? "justify-end" : "justify-start"
+              }`}
+            >
+              <div
+                className={`max-w-[75%] px-4 py-3 rounded-2xl shadow ${
+                  mine
+                    ? "bg-blue-600 text-white"
+                    : "bg-slate-700 text-white"
+                }`}
+              >
+                {message.text}
+              </div>
+            </div>
+          );
+        })}
+
+        <div ref={bottomRef}></div>
+
+      </div>
+
+      {/* Barra scrittura */}
+      <div className="bg-slate-800 border-t border-slate-700 p-4">
+
+        <div className="flex gap-3">
+
+          <input
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") sendMessage();
+            }}
+            placeholder="Scrivi un messaggio..."
+            className="flex-1 bg-slate-700 text-white rounded-xl px-4 py-3 outline-none"
+          />
+
+          <button
+            onClick={sendMessage}
+            className="bg-blue-600 hover:bg-blue-700 px-6 rounded-xl text-white font-semibold"
+          >
+            Invia
+          </button>
+
+        </div>
+
+      </div>
+
+    </div>
   );
 }
