@@ -96,13 +96,13 @@ export default function CommunityPage() {
     <>
       <Navbar />
 
-      <main className="min-h-screen pt-32 px-8 pb-16">
+      <main className="min-h-screen pt-28 md:pt-32 px-4 md:px-8 pb-16">
 
         <div className="max-w-7xl mx-auto">
 
           <div className="text-center mb-14">
 
-            <h1 className="text-6xl font-black">
+            <h1 className="text-4xl md:text-6xl font-black">
               🚢 Community CruiseMatch
             </h1>
 
@@ -112,8 +112,7 @@ export default function CommunityPage() {
 
           </div>
 
-          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-8">
-
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {users.map((user) => (
               <div
                 key={user.id}
@@ -122,7 +121,7 @@ export default function CommunityPage() {
 
                 <div className="flex justify-center">
 
-                  <div className="w-32 h-32 rounded-full bg-gradient-to-br from-cyan-300 to-blue-700 flex items-center justify-center text-5xl font-black text-white shadow-2xl">
+                  <div className="w-24 h-24 md:w-32 md:h-32 rounded-full bg-gradient-to-br from-cyan-300 to-blue-700 flex items-center justify-center text-5xl font-black text-white shadow-2xl">
 
                     {user.name.charAt(0).toUpperCase()}
 
@@ -130,7 +129,7 @@ export default function CommunityPage() {
 
                 </div>
 
-                <h2 className="text-3xl text-center font-black mt-6">
+                <h2 className="text-2xl md:text-3xl text-center font-black mt-6">
 
                   {user.name}
 
@@ -139,7 +138,7 @@ export default function CommunityPage() {
                 <p className="text-center text-cyan-200">
 
                   {user.age} anni
-                </p>                <div className="mt-8 space-y-3">
+                </p>                <div className="mt-6 space-y-2 text-sm md:text-base">
 
                   <div className="flex items-center justify-between">
                     <span>📍 Città</span>
@@ -184,19 +183,22 @@ export default function CommunityPage() {
 
                 </div>
 
-                <div className="mt-8 space-y-3">
+              <div className="mt-8 space-y-3">
 
-                  <Link href={`/profile-user?id=${user.id}`}>
-                    <button className="btn-primary w-full">
-                      👤 Visualizza Profilo
-                    </button>
-                  </Link>
+  <Link href={`/profile-user?id=${user.id}`}>
+    <button className="btn-primary w-full py-4 text-lg">
+      👤 Visualizza Profilo
+    </button>
+  </Link>
 
-                  <button className="btn-secondary w-full">
-                    ❤️ Mi interessa
-                  </button>
+  <button
+    onClick={() => sendLike(user.id)}
+    className="btn-secondary w-full py-4 text-lg"
+  >
+    ❤️ Mi interessa
+  </button>
 
-                </div>
+</div>
 
               </div>
             ))}

@@ -1,5 +1,5 @@
 import "./globals.css";
-
+import Script from "next/script";
 export const metadata = {
   title: "CruiseMatch",
   description: "Trova gli amici della tua prossima crociera",
@@ -13,7 +13,12 @@ export default function RootLayout({
   return (
     <html lang="it">
       <body className="min-h-screen text-white antialiased">
-
+<Script
+  async
+  src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4459738177420708"
+  crossOrigin="anonymous"
+  strategy="afterInteractive"
+/>
         <div className="fixed inset-0 -z-20">
           <img
            src="/images/ocean.jpg"
